@@ -101,7 +101,8 @@ From R data to Emacs list."
 (cl-defgeneric ess-r-insert-obj-do-complete-data (backend str)
   "Completing input.
 
-Argument BACKEND Backend to dispatch, i.e., the `ess-r-insert-obj-current-complete-backend'.
+Argument BACKEND Backend to dispatch, i.e.,
+the `ess-r-insert-obj-current-complete-backend'.
 Argument STR R script to run.")
 
 ;;; jsonlite
