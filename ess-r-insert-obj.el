@@ -24,7 +24,28 @@
 
 ;;; Commentary:
 
-;;
+;; ## Utils:
+;; Data.frame-like object:
+;; - [x] ess-r-insert-obj-dt-name
+
+;; Column/Variable name: with `C-u C-u`, it prompt for the dt name for search in.
+;; - [x] ess-r-insert-obj-col-name
+;; - [x] ess-r-insert-obj-col-name-all
+
+;; Column/Variable name: with `C-u C-u`, it prompt for the dt name for search in, or
+;; with `C-u`, it prompt for column/variable name to search in.
+;; - [x] ess-r-insert-obj-value
+;; - [x] ess-r-insert-obj-value-all
+
+;; ## Customization
+;; ### ess-r-insert-obj-complete-backend-list
+;; - jsonlite
+;; ### ess-r-insert-obj-read-string
+;; - ess-completing-read (default)
+;; - completing-read
+;; - ido-completing-read
+;; - ivy-completing-read
+
 
 ;;; Code:
 
@@ -43,7 +64,9 @@
   "List of backends to read completion list.")
 
 (defcustom ess-r-insert-obj-current-complete-backend 'jsonlite
-  "The backend to save data."
+  "The backend to complete data.
+
+From R data to Emacs list."
   :type `(choice ,@(mapcar (lambda (x)
 			                 `(const :tag ,(symbol-name x) ,x))
 			               ess-r-insert-obj-complete-backend-list)
@@ -66,20 +89,26 @@
   "The candidate for completion.")
 
 (defvar-local ess-r-insert-obj-dt-candidate nil
-  "The candidate for completion.")
+  "The candidate for completion from which dt.")
 
 (defvar-local ess-r-insert-obj-col-candidate nil
-  "The candidate for completion.")
+  "The candidate for completion from which column (variable).")
 
 (defvar-local ess-r-insert-obj-candidate nil
   "The candidate for completion.")
 
 
-(cl-defgeneric ess-r-insert-obj-do-complete-data (backend str))
+(cl-defgeneric ess-r-insert-obj-do-complete-data (backend str)
+  "Completing input.
+
+Argument BACKEND Backend to dispatch, i.e., the `ess-r-insert-obj-current-complete-backend'.
+Argument STR R script to run.")
 
 ;;; jsonlite
 (cl-defmethod ess-r-insert-obj-do-complete-data ((_backend (eql jsonlite)) &optional dataframe)
-  "To get the list for completing in data frame."
+  "To get the list for completing in data frame.
+
+Optional argument DATAFRAME name of data.frame-like object."
   (let (cmd result)
     (setq cmd
           (concat
@@ -91,9 +120,9 @@
     result))
 
 
-
+;;; Utility
 (defun ess-r-insert-obj-get-objects ()
-  "Set the object for completion."
+  "Get the list of data.frame-like objects (is.list) for completion."
   (let* ((call1 "ls()[c(sapply(ls(), function(x) {is.list(eval(parse(text = x)))}))]")
          (cmd (concat  call1 "\n")))
     (setq ess-r-insert-obj-dt-candidate (ess-get-words-from-vector cmd))
@@ -121,7 +150,9 @@
 
 
 (defun ess-r-insert-obj--previous-complete-object (prop)
-  "Search for the object."
+  "Search for the object.
+
+Argument PROP text property, i.e., dt-insert, col-insert."
   (let (prop-value)
     (while (progn
              (goto-char (previous-single-char-property-change (point) prop))
@@ -131,8 +162,9 @@
     prop-value))
 
 
+;;;###autoload
 (defun ess-r-insert-obj-dt-name ()
-  "ess view data do complete"
+  "Insert name of data.frame-like object."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
@@ -161,8 +193,14 @@
     (insert (propertize dt-insert 'dt-insert dt-insert))))
 
 
+;;;###autoload
 (defun ess-r-insert-obj-col-name ()
-  "ess view data do complete"
+  "Insert column/variable name.
+
+If called with a prefix, prompt for a data.frame-like object to search in.
+
+With two \\[universal-argument] prefixes (i.e., when `current-prefix-arg' is (16)),
+prompt for a data.frame-like object to search in."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
@@ -231,8 +269,14 @@
             (insert (propertize com 'dt-insert dt-insert))))))))
 
 
+;;;###autoload
 (defun ess-r-insert-obj-col-name-all ()
-  "ess view data do complete"
+  "Inseart names of all column/variable name.
+
+If called with a prefix, prompt for a data.frame-like object to search in.
+
+With two \\[universal-argument] prefixes (i.e., when `current-prefix-arg' is (16)),
+prompt for a data.frame-like object to search in."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
@@ -243,7 +287,7 @@
          (proc (get-process proc-name))
          dt-insert)
 
-    (when (or current-prefix-arg
+    (when (or (equal current-prefix-arg '(16))
             (null (save-excursion
                     (save-restriction
                       (setq dt-insert (ess-r-insert-obj--previous-complete-object 'dt-insert))))))
@@ -273,8 +317,17 @@
                                           (delete-dups obj-list) ",")
                                'dt-insert dt-insert))))))
 
+;;;###autoload
 (defun ess-r-insert-obj-value ()
-  "ess view data do complete"
+  "Insert variable value.
+
+If called with a prefix, prompt for a data.frame-like object or
+column/variable to search in.
+
+With a \\[universal-argument] prefix (i.e., when `current-prefix-arg' is (4)),
+prompt for a column/variable object to search in.
+With two \\[universal-argument] prefixes (i.e., when `current-prefix-arg' is (16)),
+prompt for a data.frame-like object to search in."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
@@ -321,7 +374,6 @@
                      nil t)))
 
     (when (and dt-insert col-insert)
-
           (let* ((possible-completions (ess-r-get-rcompletions))
                  (token-string (or (car possible-completions) ""))
                  (start (- (point) (length token-string)))
@@ -345,9 +397,17 @@
                                 'dt-insert dt-insert
                                 'col-insert col-insert))))))
 
-
+;;;###autoload
 (defun ess-r-insert-obj-value-all ()
-  "ess view data do complete"
+  "Insert all variable values.
+
+If called with a prefix, prompt for a data.frame-like object or
+column/variable to search in.
+
+With a \\[universal-argument] prefix (i.e., when `current-prefix-arg' is (4)),
+prompt for a column/variable object to search in.
+With two \\[universal-argument] prefixes (i.e., when `current-prefix-arg' is (16)),
+prompt for a data.frame-like object to search in."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
