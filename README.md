@@ -1,6 +1,14 @@
 # ess-r-insert-obj
 
-Utilities to help inserting variable (column) names or values in ESS-R
+Utilities to help inserting variable (column) names or values in ESS-R.
+
+ESS-R has it own completing system, e.g., `ess-r-complete-object-name` and
+`ess-r-get-rcompletions`. For example, if `dt` is a data.frame, after the `$`
+(`dt$|`), the completing list of variables in the data.frame will be prompted.
+
+However, if we works with tidyverse, the completing system is not so helpful.
+This package provide the utilities to help completing names of data frame or
+variable values in a semi-automatic way.
 
 ## Installation
 
