@@ -272,7 +272,7 @@ prompt for a data.frame-like object to search in."
 
 ;;;###autoload
 (defun ess-r-insert-obj-col-name-all ()
-  "Inseart names of all column/variable name.
+  "Insert names of all column/variable name.
 
 If called with a prefix, prompt for a data.frame-like object to search in.
 
