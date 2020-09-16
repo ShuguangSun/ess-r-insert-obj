@@ -22,18 +22,18 @@ Clone this repository, or install from MELPA. Add the following to your `.emacs`
 
 Data.frame-like object:
 
-- [x] ess-r-insert-obj-dt-name
+- M-x ess-r-insert-obj-dt-name
 
-Column/Variable name: with `C-u C-u`, it prompt for the dt name for search in.
+Variable (Column) name: with `C-u C-u`, it prompt for the dt name for search in.
 
-- [x] ess-r-insert-obj-col-name
-- [x] ess-r-insert-obj-col-name-all
+- M-x ess-r-insert-obj-col-name
+- M-x ess-r-insert-obj-col-name-all
 
-Column/Variable name: with `C-u C-u`, it prompt for the dt name for search in, or
+Variable (Column) value: with `C-u C-u`, it prompt for the dt name for search in, or
 with `C-u`, it prompt for column/variable name to search in.
 
-- [x] ess-r-insert-obj-value
-- [x] ess-r-insert-obj-value-all
+- M-x ess-r-insert-obj-value
+- M-x ess-r-insert-obj-value-all
 
 ## Customization
 

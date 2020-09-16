@@ -1,4 +1,4 @@
-;;; ess-r-insert-obj.el --- ESS complete insert value  -*- lexical-binding: t; -*-
+;;; ess-r-insert-obj.el --- Insert objects in ESS-R  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020  Shuguang Sun <shuguang79@qq.com>
 
@@ -24,18 +24,22 @@
 
 ;;; Commentary:
 
+;; This package contains utilities to help insert variable (column) names or
+;; values in ESS-R. The listing is as follows.
+
 ;; ## Utils:
-;; Data.frame-like object:
-;; - [x] ess-r-insert-obj-dt-name
+;; To help insert Data.frame-like object:
+;; - M-x ess-r-insert-obj-dt-name
 
-;; Column/Variable name: with `C-u C-u`, it prompt for the dt name for search in.
-;; - [x] ess-r-insert-obj-col-name
-;; - [x] ess-r-insert-obj-col-name-all
+;; To help insert Variable (Column) name: with `C-u C-u`, it prompts for the dt
+;; name to search in.
+;; - M-x ess-r-insert-obj-col-name
+;; - M-x ess-r-insert-obj-col-name-all
 
-;; Column/Variable name: with `C-u C-u`, it prompt for the dt name for search in, or
-;; with `C-u`, it prompt for column/variable name to search in.
-;; - [x] ess-r-insert-obj-value
-;; - [x] ess-r-insert-obj-value-all
+;; To help insert values: with `C-u C-u`, it prompts for the dt name to search
+;; in, or with `C-u`, it prompts for column/variable name to search in.
+;; - M-x ess-r-insert-obj-value
+;; - M-x ess-r-insert-obj-value-all
 
 ;; ## Customization
 ;; ### ess-r-insert-obj-complete-backend-list
@@ -110,15 +114,13 @@ Argument STR R script to run.")
   "To get the list for completing in data frame.
 
 Optional argument DATAFRAME name of data.frame-like object."
-  (let (cmd result)
-    (setq cmd
-          (concat
+  (let ((cmd
+         (concat
            "jsonlite::toJSON("
            (format "c(list(%1$s = names(%1$s)), lapply(%1$s, function(x) as.character(unique(x))))"
                    (or dataframe ess-r-insert-obj-object))
-           ")\n"))
-    (setq result (json-read-from-string (ess-string-command cmd)))
-    result))
+           ")\n")))
+    (json-read-from-string (ess-string-command cmd))))
 
 
 ;;; Utility
@@ -134,7 +136,7 @@ Optional argument DATAFRAME name of data.frame-like object."
   (interactive "P")
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
-    (error "Not in an R buffer with attached process"))
+    (user-error "Not in an R buffer with attached process"))
   (let* ((buf (current-buffer))
          (proc-name (buffer-local-value 'ess-local-process-name buf))
          (proc (get-process proc-name))
@@ -169,7 +171,7 @@ Argument PROP text property, i.e., dt-insert, col-insert."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
-    (error "Not in an R buffer with attached process"))
+    (user-error "Not in an R buffer with attached process"))
 
   (let* ((possible-completions (ess-r-get-rcompletions))
          (token-string (or (car possible-completions) ""))
@@ -205,7 +207,7 @@ prompt for a data.frame-like object to search in."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
-    (error "Not in an R buffer with attached process"))
+    (user-error "Not in an R buffer with attached process"))
 
   (let* ((buf (current-buffer))
          (proc-name (buffer-local-value 'ess-local-process-name buf))
@@ -281,7 +283,7 @@ prompt for a data.frame-like object to search in."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
-    (error "Not in an R buffer with attached process"))
+    (user-error "Not in an R buffer with attached process"))
 
   (let* ((buf (current-buffer))
          (proc-name (buffer-local-value 'ess-local-process-name buf))
@@ -332,7 +334,7 @@ prompt for a data.frame-like object to search in."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
-    (error "Not in an R buffer with attached process"))
+    (user-error "Not in an R buffer with attached process"))
 
   (let* ((buf (current-buffer))
          (proc-name (buffer-local-value 'ess-local-process-name buf))
@@ -412,7 +414,7 @@ prompt for a data.frame-like object to search in."
   (interactive)
   (unless (and ;; (string= "R" ess-dialect)
            ess-local-process-name)
-    (error "Not in an R buffer with attached process"))
+    (user-error "Not in an R buffer with attached process"))
 
   (let* ((buf (current-buffer))
          (proc-name (buffer-local-value 'ess-local-process-name buf))
