@@ -6,6 +6,7 @@
 (eldev-use-package-archive 'gnu)
 (eldev-use-package-archive 'melpa)
 
+(eldev-use-plugin 'autoloads)
 
 ;; Avoid including files in test "projects".
 (setf eldev-standard-excludes (append eldev-standard-excludes '("./test/*/")))
