@@ -1,5 +1,7 @@
 [![MELPA](https://melpa.org/packages/ess-r-insert-obj-badge.svg)](https://melpa.org/#/ess-r-insert-obj)
 [![MELPA Stable](https://stable.melpa.org/packages/ess-r-insert-obj-badge.svg)](https://stable.melpa.org/#/ess-r-insert-obj)
+[![Build Status](https://github.com/ShuguangSun/ess-r-insert-obj/workflows/CI/badge.svg)](https://github.com/ShuguangSun/ess-r-insert-obj/actions)
+[![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
 # ess-r-insert-obj
 
