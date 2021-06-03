@@ -1,3 +1,6 @@
+[![MELPA](https://melpa.org/packages/ess-r-insert-obj-badge.svg)](https://melpa.org/#/ess-r-insert-obj)
+[![MELPA Stable](https://stable.melpa.org/packages/ess-r-insert-obj-badge.svg)](https://stable.melpa.org/#/ess-r-insert-obj)
+
 # ess-r-insert-obj
 
 Utilities to help inserting variable (column) names or values in ESS-R.
