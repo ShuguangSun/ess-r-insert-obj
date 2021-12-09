@@ -126,7 +126,7 @@ Optional argument DATAFRAME name of data.frame-like object."
 ;;; Utility
 (defun ess-r-insert-obj-get-objects ()
   "Get the list of data.frame-like objects (is.list) for completion."
-  (let* ((call1 "ls()[c(sapply(ls(), function(x) {is.list(eval(parse(text = x)))}))]")
+  (let* ((call1 "ls(.GlobalEnv)[c(sapply(ls(.GlobalEnv), function(x) {is.list(eval(parse(text = x)))}))]")
          (cmd (concat  call1 "\n")))
     (setq ess-r-insert-obj-dt-candidate (ess-get-words-from-vector cmd))
     ess-r-insert-obj-dt-candidate))
