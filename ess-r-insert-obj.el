@@ -250,14 +250,14 @@ prompt for a data.frame-like object to search in."
                                    (format "Column (%s), C-j to finish"
                                            (mapconcat 'identity
                                                       (setq objs2 (nreverse objs2))
-                                                      ","))
+                                                      ", "))
                                    objs))
                 (unless (equal obj "")
                   (setq objs (delete obj objs))
                   (cl-pushnew obj obj-list)
                   (cl-pushnew obj objs2)))
               (unless (null obj-list)
-                (insert (propertize (mapconcat 'identity (delete-dups (nreverse obj-list)) ",")
+                (insert (propertize (mapconcat 'identity (delete-dups (nreverse obj-list)) ", ")
                                     'dt-insert dt-insert))))
           (let* ((possible-completions (ess-r-get-rcompletions))
                  (token-string (or (car possible-completions) ""))
@@ -317,8 +317,8 @@ prompt for a data.frame-like object to search in."
                                        ess-r-insert-obj-candidate))
                           nil)))
           (insert (propertize (mapconcat 'identity
-                                          (delete-dups obj-list) ",")
                                'dt-insert dt-insert))))))
+                                       (delete-dups obj-list) ", ")
 
 ;;;###autoload
 (defun ess-r-insert-obj-value ()
@@ -467,7 +467,7 @@ prompt for a data.frame-like object to search in."
                                      ess-r-insert-obj-candidate))
                         nil)))
         (insert (propertize (mapconcat 'identity
-                                       (delete-dups obj-list) ",")
+                                       (delete-dups obj-list) ", ")
                             'dt-insert dt-insert
                             'col-insert col-insert))))))
 
